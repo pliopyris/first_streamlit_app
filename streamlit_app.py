@@ -28,6 +28,11 @@ st.dataframe(fruits_to_show)
 # Display FruityVice API response
 st.header('Fruityvice Fruit Advice')
 
+def get_fruityvice_data(this_fruit_choice):
+  fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + this_fruit_choice)
+  fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+  return fruityvice_normalized
+
 try:
   # user choice
   fruit_choice = st.text_input('What fruit would you like information about?')
@@ -36,12 +41,12 @@ try:
   if not fruit_choice:
     st.error('Please select a fruit to get information.')
   else:
-    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
+    # fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
     # st.text(fruityvice_response.json())
-
     # normalize api response (json) and pass it to a df
-    fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
-    st.dataframe(fruityvice_normalized)
+    # fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+    back_from_func = get_fruityvice_data(fruit_choice)
+    st.dataframe(back_from_func)
 except URLError as e:
     st.error()
 
